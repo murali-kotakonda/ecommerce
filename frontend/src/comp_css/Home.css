@@ -1,0 +1,33 @@
+﻿/* Customer home — category showcase (backend-driven, no static assets) */
+.home-section { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+.home-section h2 { font-size: 22px; margin: 0 0 16px; color: #111827; }
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+.category-tile {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  text-decoration: none;
+  color: inherit;
+}
+.category-tile:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.1); }
+.category-tile .cat-img {
+  height: 130px; width: 100%; object-fit: cover; background: #f3f4f6; display: block;
+}
+.category-tile .cat-name {
+  padding: 10px 12px; font-size: 14px; font-weight: 600; text-align: center;
+}
+.home-empty, .home-loading { text-align: center; color: #6b7280; padding: 30px; }
+.cat-skel { height: 130px; background: linear-gradient(90deg,#eee 25%,#f5f5f5 37%,#eee 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+@keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+@media (max-width: 480px) {
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+}
