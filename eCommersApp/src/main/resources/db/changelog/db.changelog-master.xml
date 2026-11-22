@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+        MIGRATION RULES (important):
+        - Changesets 001 and 002 are already applied and tracked in DATABASECHANGELOG.
+          DO NOT edit them; changing applied changesets breaks checksum validation.
+        - For any new schema or data change, add a NEW file below (e.g. 003-xxx.xml)
+          with new changeSet ids. Liquibase runs only unapplied changesets, so existing
+          data is preserved across restarts.
+        - Seed inserts should be idempotent where possible (use preconditions /
+          onFail="MARK_RAN" so re-running cannot create duplicates).
+    -->
+
+    <!-- Schema: mirrors the JPA entity model (applied) -->
+    <include file="db/changelog/changes/001-create-schema.xml"/>
+
+    <!-- Seed data: users, categories, products, shippers (applied) -->
+    <include file="db/changelog/changes/002-seed-data.xml"/>
+
+    <!-- Add new incremental changesets here as 003-*.xml, 004-*.xml, ... -->
+
+</databaseChangeLog>

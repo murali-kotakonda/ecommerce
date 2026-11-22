@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ============ users ============ -->
+    <changeSet id="001-users" author="kiro">
+        <createTable tableName="users">
+            <column name="user_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="user_reg_time" type="TIMESTAMP"/>
+            <column name="user_role" type="VARCHAR(255)"/>
+            <column name="user_account_status" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ categories ============ -->
+    <changeSet id="001-categories" author="kiro">
+        <createTable tableName="categories">
+            <column name="category_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="image_url" type="VARCHAR(500)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="updated_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ products ============ -->
+    <changeSet id="001-products" author="kiro">
+        <createTable tableName="products">
+            <column name="product_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_available" type="BOOLEAN"/>
+            <column name="description" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_description" type="VARCHAR(255)"/>
+            <column name="sku" type="VARCHAR(255)">
+                <constraints unique="true" uniqueConstraintName="idx_product_sku"/>
+            </column>
+            <column name="brand" type="VARCHAR(255)"/>
+            <column name="images" type="VARCHAR(2000)"/>
+            <column name="discount_price" type="FLOAT8"/>
+            <column name="stock_quantity" type="INTEGER"/>
+            <column name="rating" type="FLOAT8"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="updated_date" type="TIMESTAMP"/>
+        </createTable>
+        <createIndex indexName="idx_product_name" tableName="products">
+            <column name="name"/>
+        </createIndex>
+        <createIndex indexName="idx_product_category" tableName="products">
+            <column name="category_name"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============ cart ============ -->
+    <changeSet id="001-cart" author="kiro">
+        <createTable tableName="cart">
+            <column name="cart_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sub_total" type="FLOAT8"/>
+            <column name="tax_amount" type="FLOAT8"/>
+            <column name="total_amount" type="FLOAT8"/>
+            <column name="user_id" type="INTEGER">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ cart_items ============ -->
+    <changeSet id="001-cart-items" author="kiro">
+        <createTable tableName="cart_items">
+            <column name="cart_item_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cart_id" type="INTEGER"/>
+            <column name="product_id" type="INTEGER"/>
+            <column name="quantity" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ orders ============ -->
+    <changeSet id="001-orders" author="kiro">
+        <createTable tableName="orders">
+            <column name="order_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="order_date" type="TIMESTAMP"/>
+            <column name="user_id" type="INTEGER"/>
+            <column name="total_amount" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_total" type="FLOAT8"/>
+            <column name="tax_amount" type="FLOAT8"/>
+            <column name="payment_id" type="BIGINT">
+                <constraints unique="true"/>
+            </column>
+            <column name="shipping_details_id" type="BIGINT">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ order_item ============ -->
+    <changeSet id="001-order-item" author="kiro">
+        <createTable tableName="order_item">
+            <column name="order_item_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_id" type="INTEGER"/>
+            <column name="product_id" type="INTEGER"/>
+            <column name="quantity" type="INTEGER"/>
+            <column name="unit_price" type="FLOAT8"/>
+            <column name="line_total" type="FLOAT8"/>
+        </createTable>
+    </changeSet>
+
+    <!-- join table created by Hibernate for Orders.orderItem (unidirectional) -->
+    <changeSet id="001-orders-order-item" author="kiro">
+        <createTable tableName="orders_order_item">
+            <column name="orders_order_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_item_order_item_id" type="INTEGER">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ payments ============ -->
+    <changeSet id="001-payments" author="kiro">
+        <createTable tableName="payments">
+            <column name="payment_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="payment_date" type="TIMESTAMP"/>
+            <column name="payment_amount" type="FLOAT8"/>
+            <column name="payment_method" type="VARCHAR(255)"/>
+            <column name="payment_status" type="VARCHAR(255)"/>
+            <column name="order_id" type="INTEGER">
+                <constraints unique="true"/>
+            </column>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ reviews ============ -->
+    <changeSet id="001-reviews" author="kiro">
+        <createTable tableName="reviews">
+            <column name="review_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rating" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="user_id" type="INTEGER"/>
+            <column name="product_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ address ============ -->
+    <changeSet id="001-address" author="kiro">
+        <createTable tableName="address">
+            <column name="addressid" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="flat_no" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zip_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="userid" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ shipper ============ -->
+    <changeSet id="001-shipper" author="kiro">
+        <createTable tableName="shipper">
+            <column name="shipper_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ shipping ============ -->
+    <changeSet id="001-shipping" author="kiro">
+        <createTable tableName="shipping">
+            <column name="shipping_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="postal_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipper_id" type="INTEGER"/>
+            <column name="order_id" type="INTEGER">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ============ wishlist_items ============ -->
+    <changeSet id="001-wishlist-items" author="kiro">
+        <createTable tableName="wishlist_items">
+            <column name="wishlist_item_id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="INTEGER"/>
+            <column name="added_date" type="TIMESTAMP"/>
+        </createTable>
+        <addUniqueConstraint tableName="wishlist_items"
+                             columnNames="user_id, product_id"
+                             constraintName="uk_wishlist_user_product"/>
+        <createIndex indexName="idx_wishlist_user" tableName="wishlist_items">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============ foreign keys ============ -->
+    <changeSet id="001-foreign-keys" author="kiro">
+        <addForeignKeyConstraint baseTableName="address" baseColumnNames="userid"
+                                 referencedTableName="users" referencedColumnNames="user_id"
+                                 constraintName="fk_address_user"/>
+        <addForeignKeyConstraint baseTableName="cart" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="user_id"
+                                 constraintName="fk_cart_user"/>
+        <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="cart_id"
+                                 referencedTableName="cart" referencedColumnNames="cart_id"
+                                 constraintName="fk_cartitem_cart"/>
+        <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="product_id"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 constraintName="fk_cartitem_product"/>
+        <addForeignKeyConstraint baseTableName="order_item" baseColumnNames="product_id"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 constraintName="fk_orderitem_product"/>
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="user_id"
+                                 constraintName="fk_orders_user"/>
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="payment_id"
+                                 referencedTableName="payments" referencedColumnNames="payment_id"
+                                 constraintName="fk_orders_payment"/>
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="shipping_details_id"
+                                 referencedTableName="shipping" referencedColumnNames="shipping_id"
+                                 constraintName="fk_orders_shipping"/>
+        <addForeignKeyConstraint baseTableName="orders_order_item" baseColumnNames="orders_order_id"
+                                 referencedTableName="orders" referencedColumnNames="order_id"
+                                 constraintName="fk_ooi_orders"/>
+        <addForeignKeyConstraint baseTableName="orders_order_item" baseColumnNames="order_item_order_item_id"
+                                 referencedTableName="order_item" referencedColumnNames="order_item_id"
+                                 constraintName="fk_ooi_orderitem"/>
+        <addForeignKeyConstraint baseTableName="payments" baseColumnNames="order_id"
+                                 referencedTableName="orders" referencedColumnNames="order_id"
+                                 constraintName="fk_payment_order"/>
+        <addForeignKeyConstraint baseTableName="payments" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="user_id"
+                                 constraintName="fk_payment_user"/>
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="product_id"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 constraintName="fk_review_product"/>
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="user_id"
+                                 constraintName="fk_review_user"/>
+        <addForeignKeyConstraint baseTableName="shipping" baseColumnNames="order_id"
+                                 referencedTableName="orders" referencedColumnNames="order_id"
+                                 constraintName="fk_shipping_order"/>
+        <addForeignKeyConstraint baseTableName="shipping" baseColumnNames="shipper_id"
+                                 referencedTableName="shipper" referencedColumnNames="shipper_id"
+                                 constraintName="fk_shipping_shipper"/>
+        <addForeignKeyConstraint baseTableName="wishlist_items" baseColumnNames="product_id"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 constraintName="fk_wishlist_product"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ============ users (passwords are BCrypt-hashed) ============
+         admin@ecom.com    / admin123
+         customer@ecom.com / customer123
+         jane@ecom.com     / password
+    -->
+    <changeSet id="002-seed-users" author="kiro">
+        <insert tableName="users">
+            <column name="email" value="admin@ecom.com"/>
+            <column name="password" value="$2a$10$YJomjK74.1IDQsZoRy2Mcu7de7S0ZUHl5fxxlazwyJAvhs1IdEZCW"/>
+            <column name="first_name" value="System"/>
+            <column name="last_name" value="Admin"/>
+            <column name="phone_number" value="9999999999"/>
+            <column name="user_reg_time" valueDate="2026-01-01T00:00:00"/>
+            <column name="user_role" value="ROLE_ADMIN"/>
+            <column name="user_account_status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="customer@ecom.com"/>
+            <column name="password" value="$2a$10$uSY9owQGRSy4vht8qKqIZuV3DzZOZbK2BAQ35JdtSW7Rq7Bb85WZa"/>
+            <column name="first_name" value="Demo"/>
+            <column name="last_name" value="Customer"/>
+            <column name="phone_number" value="8888888888"/>
+            <column name="user_reg_time" valueDate="2026-01-01T00:00:00"/>
+            <column name="user_role" value="ROLE_USER"/>
+            <column name="user_account_status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="jane@ecom.com"/>
+            <column name="password" value="$2a$10$2mh9lOKPk.mP58V4raFqguTIRthPZseWOWLopy88.KMH8RH0uck36"/>
+            <column name="first_name" value="Jane"/>
+            <column name="last_name" value="Doe"/>
+            <column name="phone_number" value="7777777777"/>
+            <column name="user_reg_time" valueDate="2026-01-01T00:00:00"/>
+            <column name="user_role" value="ROLE_USER"/>
+            <column name="user_account_status" value="ACTIVE"/>
+        </insert>
+    </changeSet>
+
+    <!-- ============ categories ============ -->
+    <changeSet id="002-seed-categories" author="kiro">
+        <insert tableName="categories">
+            <column name="name" value="Fruits"/>
+            <column name="description" value="Fresh seasonal fruits"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Vegetables"/>
+            <column name="description" value="Farm fresh vegetables"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Dairy"/>
+            <column name="description" value="Milk and dairy products"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Bakery"/>
+            <column name="description" value="Breads and baked goods"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+    </changeSet>
+
+    <!-- ============ products ============ -->
+    <changeSet id="002-seed-products" author="kiro">
+        <insert tableName="products">
+            <column name="name" value="Red Apple"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Crisp and juicy red apples, sourced fresh daily from local orchards."/>
+            <column name="price" valueNumeric="120.0"/>
+            <column name="category_name" value="Fruits"/>
+            <column name="short_description" value="Crisp red apples"/>
+            <column name="sku" value="APL-001"/>
+            <column name="brand" value="FarmFresh"/>
+            <column name="discount_price" valueNumeric="99.0"/>
+            <column name="stock_quantity" valueNumeric="50"/>
+            <column name="rating" valueNumeric="4.5"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Fresh Banana"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Naturally ripened bananas rich in potassium, perfect for a healthy snack."/>
+            <column name="price" valueNumeric="60.0"/>
+            <column name="category_name" value="Fruits"/>
+            <column name="short_description" value="Ripe bananas"/>
+            <column name="sku" value="BAN-001"/>
+            <column name="brand" value="FarmFresh"/>
+            <column name="stock_quantity" valueNumeric="80"/>
+            <column name="rating" valueNumeric="4.2"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Organic Tomato"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1546470427-f5b2d4e9f2b4"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Vine-ripened organic tomatoes grown without pesticides, great for salads."/>
+            <column name="price" valueNumeric="40.0"/>
+            <column name="category_name" value="Vegetables"/>
+            <column name="short_description" value="Organic tomatoes"/>
+            <column name="sku" value="TOM-001"/>
+            <column name="brand" value="GreenField"/>
+            <column name="discount_price" valueNumeric="35.0"/>
+            <column name="stock_quantity" valueNumeric="100"/>
+            <column name="rating" valueNumeric="4.0"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Whole Milk 1L"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1550583724-b2692b85b150"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Farm fresh pasteurized whole milk, 1 litre pack, rich in calcium."/>
+            <column name="price" valueNumeric="55.0"/>
+            <column name="category_name" value="Dairy"/>
+            <column name="short_description" value="Fresh whole milk"/>
+            <column name="sku" value="MLK-001"/>
+            <column name="brand" value="DairyPure"/>
+            <column name="stock_quantity" valueNumeric="30"/>
+            <column name="rating" valueNumeric="4.6"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Brown Bread"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1509440159596-0249088772ff"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Freshly baked whole wheat brown bread, soft and healthy for breakfast."/>
+            <column name="price" valueNumeric="45.0"/>
+            <column name="category_name" value="Bakery"/>
+            <column name="short_description" value="Whole wheat bread"/>
+            <column name="sku" value="BRD-001"/>
+            <column name="brand" value="BakeHouse"/>
+            <column name="discount_price" valueNumeric="40.0"/>
+            <column name="stock_quantity" valueNumeric="60"/>
+            <column name="rating" valueNumeric="4.3"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Green Grapes"/>
+            <column name="image_url" value="https://images.unsplash.com/photo-1599819177626-b50f3b9b5b1f"/>
+            <column name="is_available" valueBoolean="true"/>
+            <column name="description" value="Seedless green grapes, sweet and refreshing, packed with antioxidants."/>
+            <column name="price" valueNumeric="90.0"/>
+            <column name="category_name" value="Fruits"/>
+            <column name="short_description" value="Seedless grapes"/>
+            <column name="sku" value="GRP-001"/>
+            <column name="brand" value="FarmFresh"/>
+            <column name="stock_quantity" valueNumeric="40"/>
+            <column name="rating" valueNumeric="4.1"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_date" valueDate="2026-01-01T00:00:00"/>
+            <column name="updated_date" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+    </changeSet>
+
+    <!-- ============ shipper ============ -->
+    <changeSet id="002-seed-shipper" author="kiro">
+        <insert tableName="shipper">
+            <column name="name" value="BlueDart Express"/>
+            <column name="phone_number" value="1800123456"/>
+        </insert>
+        <insert tableName="shipper">
+            <column name="name" value="Delhivery"/>
+            <column name="phone_number" value="1800987654"/>
+        </insert>
+    </changeSet>
+
+    <!-- ============ sample address for demo customer (user_id = 2) ============ -->
+    <changeSet id="002-seed-address" author="kiro">
+        <insert tableName="address">
+            <column name="flat_no" value="12B"/>
+            <column name="street" value="MG Road"/>
+            <column name="city" value="Pune"/>
+            <column name="zip_code" value="411001"/>
+            <column name="state" value="MH"/>
+            <column name="userid" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
