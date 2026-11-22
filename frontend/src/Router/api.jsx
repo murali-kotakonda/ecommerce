@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Central backend base URL. Override with REACT_APP_API_URL at build time.
 export const API_BASE_URL =
-  process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080';
+  process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

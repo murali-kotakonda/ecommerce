@@ -15,8 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -38,7 +38,7 @@ public class AppConfig {
         if (!securityEnabled) {
             // --- Auth disabled: permit everything, no JWT validator filter ---
             http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .cors(cors -> cors.configurationSource(devCorsSource()))
+                    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                     .csrf(csrf -> csrf.disable())
                     // Keep the generator so /ecom/signIn still issues a token for the UI.
@@ -49,30 +49,11 @@ public class AppConfig {
 
         http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .cors(cors -> {
-                    cors.configurationSource(new CorsConfigurationSource() {
-                        @Override
-                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
-                            CorsConfiguration cfg = new CorsConfiguration();
-
-                            // Allow the known frontend origins (not overwritten repeatedly).
-                            cfg.setAllowedOriginPatterns(Arrays.asList(
-                                    "http://localhost:3000",
-                                    "http://127.0.0.1:3000",
-                                    "https://eccomers96.netlify.app"));
-                            cfg.setAllowedMethods(Collections.singletonList("*"));
-                            cfg.setAllowCredentials(true);
-                            cfg.setAllowedHeaders(Collections.singletonList("*"));
-                            cfg.setExposedHeaders(Arrays.asList("Authorization"));
-
-                            return cfg;
-
-                        }
-                    });
-                })
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
                     auth
+                            // Allow all CORS preflight requests
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             // Public: registration, sign-in, public product/category/review reads
                             .requestMatchers(HttpMethod.POST, "/ecom/customers").permitAll()
                             .requestMatchers(HttpMethod.GET, "/ecom/signIn",
@@ -145,27 +126,31 @@ public class AppConfig {
 
     }
 
-    /** CORS config reused by the auth-disabled dev chain. */
-    private CorsConfigurationSource devCorsSource() {
-        return request -> {
-            CorsConfiguration cfg = new CorsConfiguration();
-            cfg.setAllowedOriginPatterns(Arrays.asList(
-                    "http://localhost:3000", "http://127.0.0.1:3000",
-                    "https://eccomers96.netlify.app"));
-            cfg.setAllowedMethods(Collections.singletonList("*"));
-            cfg.setAllowCredentials(true);
-            cfg.setAllowedHeaders(Collections.singletonList("*"));
-            cfg.setExposedHeaders(Arrays.asList("Authorization"));
-            return cfg;
-        };
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration cfg = new CorsConfiguration();
+        cfg.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "https://eccomers96.netlify.app"));
+        cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        cfg.setAllowCredentials(true);
+        cfg.setAllowedHeaders(Collections.singletonList("*"));
+        cfg.setExposedHeaders(Arrays.asList("Authorization"));
+        cfg.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cfg);
+        return source;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-
     }
-
 
 }
 
